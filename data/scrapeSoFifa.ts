@@ -234,7 +234,7 @@ async function getPlayerData(
     name,
     imgUrl,
     age: age ? parseInt(age, 10) : null,
-    dob,
+    dob: dob ? new Date(dob).toISOString() : null,
     height: height ? parseInt(height, 10) : null,
     weight: weight ? parseInt(weight, 10) : null,
     positions,
