@@ -21,11 +21,10 @@ type Player = {
 };
 
 // List of all the Teams that we want to keep track of
-const allTeams: Team[] = [];
-// List of all the Team names so check against easily
-const allTeamsNames: string[] = [];
+const allTeams: { [key: string]: Team } = {};
 // List of all possible Positions
-const allPositions = [
+const allPositions = new Set<string>();
+/* const allPositions = [
   "GK",
   "LWB",
   "LB",
@@ -43,7 +42,7 @@ const allPositions = [
   "RF",
   "RW",
   "ST",
-] as const;
+] as const; */
 
 async function getTeamData(teamLink: string): Promise<[Player[], string]> {
   // Load the html page for the player
@@ -217,15 +216,23 @@ async function getPlayerData(
   }
 
   // Grab each final team and add the Team data to our list of allTeams to save
-  let teams: Team[] = currentTeamInTransferTeams
+  let allPlayerTeams: Team[] = currentTeamInTransferTeams
     ? transferTeams
     : domesticTeams;
-  teams.forEach((team) => {
-    if (team.name && team.imgUrl && !allTeamsNames.includes(team.name)) {
-      allTeams.push(team);
-      allTeamsNames.push(team.name);
+  const teams = allPlayerTeams.reduce((pastTeams: Team[], team: Team) => {
+    // If there's a null value, ignore the team
+    if (!team.name || !team.imgUrl) {
+      return pastTeams;
     }
-  });
+
+    // add the current team to our object of teams to add to the DB
+    allTeams[team.name] = team;
+
+    return [...pastTeams, team];
+  }, []);
+
+  // Add the positions we find to the set
+  positions.forEach((position) => allPositions.add(position));
 
   console.log(`Successfully parsed "${name}"`);
 
@@ -270,15 +277,16 @@ const teamUrls = teamsTable
 
 // Build the final payload that we will save as JSON
 const plData: {
-  positions: typeof allPositions;
+  positions: string[];
   teams: Team[];
   players: Player[];
 } = {
-  positions: allPositions,
-  teams: allTeams,
+  positions: [],
+  teams: [],
   players: [],
 };
 
+// Fetch all the players, parse them, and add them to our payload
 for (const teamUrl of teamUrls) {
   // Make sure that the teamUrl is not null or the empty string
   if (!teamUrl) {
@@ -288,6 +296,10 @@ for (const teamUrl of teamUrls) {
   const [teamData] = await getTeamData(teamUrl);
   plData.players.push(...teamData);
 }
+
+// Add all the positions and teams to our payload
+plData.positions = Array.from(allPositions);
+plData.teams = Object.values(allTeams);
 
 // Save the JSON data to disk
 const encoder = new TextEncoder();

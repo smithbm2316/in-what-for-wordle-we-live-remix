@@ -56,12 +56,12 @@ async function seed() {
       positions: {
         every: {
           position: {
-            in: ["ST", "LF", "RF", "CF", "LW", "RW"],
+            in: ["ST", "LW", "RW"],
           },
         },
       },
     },
-  }); // Should return ~24 players
+  }); // Should return ~20 players
 
   // Create a test user for me to login with and have some pre-existing Games played
   const userEmail = "ben@remix.run";
@@ -77,11 +77,13 @@ async function seed() {
       games: {
         create: [
           {
+            date: new Date("Wed May 9 2022 10:00:12"),
             guesses: {
               connect: playersForGames.slice(0, 6),
             },
           },
           {
+            date: new Date("Wed May 10 2022 10:00:12"),
             guesses: {
               connect: playersForGames.slice(7, 11),
             },

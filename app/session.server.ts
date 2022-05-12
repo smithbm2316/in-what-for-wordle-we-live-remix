@@ -46,6 +46,7 @@ export async function getUser(request: Request) {
 export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
+  // you can set a default argument...using the value from another param?????? 🤯
 ) {
   const userId = await getUserId(request);
   if (!userId) {

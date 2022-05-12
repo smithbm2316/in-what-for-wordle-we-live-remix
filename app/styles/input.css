@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  a {
+    @apply text-current focus:ring-2 focus:ring-pl-pink focus:outline-none;
+  }
+  a:not([class]) {
+    @apply hover:text-pl-pink focus:text-pl-pink active:text-pl-pink/90;
+  }
+  input {
+    @apply w-full rounded-md outline-none focus:ring-2 focus:ring-pl-pink px-4 py-2 text-pl-darkPurple placeholder:text-pl-lightGray placeholder:font-light border-pl-lightGray shadow-inner;
+  }
+  :is(h1, h2, h3, h4, h5, h6) {
+    @apply font-semibold;
+  }
+  h1 {
+    @apply text-5xl;
+  }
+  h2 {
+    @apply text-3xl;
+  }
+  h3 {
+    @apply text-2xl;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply border-2 border-transparent text-white px-6 py-2 rounded-md font-semibold focus:ring-2 focus:ring-pl-pink focus:outline-none shadow hover:shadow-md focus:shadow-md transition duration-200;
+  }
+  .btn-dark {
+    @apply border-pl-darkPurple bg-pl-darkPurple text-white hover:bg-pl-darkPurple/90 focus:bg-pl-darkPurple/90 active:bg-pl-darkPurple/90;
+  }
+  .btn-green {
+    @apply border-pl-green bg-pl-green text-pl-darkPurple hover:bg-pl-green/80 focus:bg-pl-green/80 active:bg-pl-green/70;
+  }
+  .btn-pink {
+    @apply border-pl-pink bg-pl-pink text-pl-darkPurple hover:bg-pl-pink/90 focus:bg-pl-pink/90 active:bg-pl-pink/90;
+  }
+}

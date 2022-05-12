@@ -1,47 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id         String    @id @default(cuid())
-  email      String    @unique
-  password   Password?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @updatedAt
-  daysPlayed Int       @default(0)
-  totalWins  Int       @default(0)
-  games      Game[]
+  id        String    @id @default(cuid())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  password  Password?
+  games     Game[]
 }
 
 model Password {
-  hash   String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
+  hash String
+
+  UserId String @unique
+  User   User   @relation(fields: [UserId], references: [id], onDelete: Cascade)
 }
 
 model Game {
-  id         String   @id @default(cuid())
-  datePlayed DateTime @default(now())
-  state      String? // 'won' || 'lost' || null
-  guesses    Player[]
-  User       User?    @relation(fields: [userId], references: [id])
-  userId     String?
+  id      String   @id @default(cuid())
+  date    DateTime @default(now())
+  state   String? // win, loss, null
+  guesses Player[]
+
+  UserId String?
+  User   User?   @relation(fields: [UserId], references: [id])
 }
 
 model Team {
-  name    String   @id @unique
-  imgUrl  String
-  players Player[]
+  name   String @id @unique
+  imgUrl String
+
+  Player Player[]
 }
 
 model Position {
-  position String   @id @unique
-  players  Player[]
+  position String @id @unique
+
+  Players Player[]
 }
 
 model Player {
@@ -52,11 +54,12 @@ model Player {
   dob           DateTime
   height        Int
   weight        Int
-  positions     Position[]
   fifaRating    Int
   fifaPotential Int
   jerseyNumber  Int
   currentTeam   String
   teams         Team[]
-  Game          Game[]
+  positions     Position[]
+
+  Games Game[]
 }
