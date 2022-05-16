@@ -69,3 +69,15 @@ export function useUser(): User {
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
+
+export function dateGenerator(type?: 'last24' | 'today'): Date {
+  if (type === 'last24') {
+    // 24hrs * 60min * 60sec * 1000ms
+    return new Date(new Date().valueOf() - 24 * 60 * 60 * 1000);
+  } else if (type === 'today') {
+    // Get the today's date and set the hours, minutes, seconds, and milliseconds to 0 (12am)
+    return new Date(new Date().setHours(0, 0, 0, 0));
+  }
+  // If no date type is provided, just return a new Date representing now
+  return new Date();
+}

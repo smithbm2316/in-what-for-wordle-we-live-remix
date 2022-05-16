@@ -2,11 +2,31 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import plData from "../public/plData.json";
 
+const allPositions = [
+  "GK",
+  "LWB",
+  "LB",
+  "CB",
+  "RB",
+  "RWB",
+  "CDM",
+  "CM",
+  "LM",
+  "RM",
+  "CAM",
+  "LW",
+  "LF",
+  "CF",
+  "RF",
+  "RW",
+  "ST",
+] as const;
+
 const prisma = new PrismaClient();
 
 async function seed() {
   // Create all the Position entries from our scraped data
-  for (const pos of plData.positions) {
+  for (const pos of allPositions) {
     await prisma.position.create({
       data: {
         position: pos,
@@ -44,6 +64,7 @@ async function seed() {
   }
 
   // Query for attackers between the ages of 24 and 28
+  /*
   const playersForGames = await prisma.player.findMany({
     select: {
       id: true,
@@ -62,6 +83,7 @@ async function seed() {
       },
     },
   }); // Should return ~20 players
+  */
 
   // Create a test user for me to login with and have some pre-existing Games played
   const userEmail = "ben@remix.run";
@@ -74,7 +96,7 @@ async function seed() {
           hash: hashedPassword,
         },
       },
-      games: {
+      /* games: {
         create: [
           {
             date: new Date("Wed May 9 2022 10:00:12"),
@@ -89,7 +111,7 @@ async function seed() {
             },
           },
         ],
-      },
+      }, */
     },
   });
 

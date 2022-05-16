@@ -23,6 +23,16 @@ CREATE TABLE "Game" (
 );
 
 -- CreateTable
+CREATE TABLE "Guess" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "playerId" INTEGER NOT NULL,
+    "number" INTEGER NOT NULL,
+    "GameId" TEXT,
+    CONSTRAINT "Guess_GameId_fkey" FOREIGN KEY ("GameId") REFERENCES "Game" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "Guess_playerId_fkey" FOREIGN KEY ("playerId") REFERENCES "Player" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "Team" (
     "name" TEXT NOT NULL PRIMARY KEY,
     "imgUrl" TEXT NOT NULL
@@ -45,15 +55,8 @@ CREATE TABLE "Player" (
     "fifaRating" INTEGER NOT NULL,
     "fifaPotential" INTEGER NOT NULL,
     "jerseyNumber" INTEGER NOT NULL,
-    "currentTeam" TEXT NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_GameToPlayer" (
-    "A" TEXT NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_GameToPlayer_A_fkey" FOREIGN KEY ("A") REFERENCES "Game" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_GameToPlayer_B_fkey" FOREIGN KEY ("B") REFERENCES "Player" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "currentTeam" TEXT NOT NULL,
+    "GuessId" TEXT
 );
 
 -- CreateTable
@@ -83,12 +86,6 @@ CREATE UNIQUE INDEX "Team_name_key" ON "Team"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Position_position_key" ON "Position"("position");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_GameToPlayer_AB_unique" ON "_GameToPlayer"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_GameToPlayer_B_index" ON "_GameToPlayer"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_PlayerToTeam_AB_unique" ON "_PlayerToTeam"("A", "B");
